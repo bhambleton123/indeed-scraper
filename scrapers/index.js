@@ -22,17 +22,17 @@ const scrapeIndeed = async (url, pages) => {
         document.getElementsByClassName("jobtitle")
       ).map((title, index) => {
         return {
-          title: title.innerHTML,
+          title: title.innerHTML.slice(1),
           company: document.getElementsByClassName("company")[index].innerText,
           link: title.toString(),
-          posted: document.getElementsByClassName("date")[index].innerHTML,
+          posted: document.getElementsByClassName("date")[index].innerText,
         };
       });
 
       return jobLinks;
     });
 
-    allJobs.push(jobs);
+    allJobs = [...allJobs, ...jobs];
   }
 
   return allJobs;
