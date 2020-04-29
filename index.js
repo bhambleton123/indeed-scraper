@@ -3,7 +3,7 @@ const app = express();
 const port = 3001;
 const scrapeIndeed = require("./scrapers").scrapeIndeed;
 
-app.get("/jobs/:title/:pages", async (req, res) => {
+app.get("/jobs/:title", async (req, res) => {
   try {
     const jobs = await scrapeIndeed(
       `https://www.indeed.com/jobs?q=${req.params.title}&fromage=${
@@ -11,7 +11,7 @@ app.get("/jobs/:title/:pages", async (req, res) => {
       }&explvl=${
         req.query.exprience ? req.query.experience : "entry_level"
       }&limit=50`,
-      req.params.pages
+      req.query.pages ? req.query.pages : 1
     );
     res.send(jobs);
   } catch (err) {
