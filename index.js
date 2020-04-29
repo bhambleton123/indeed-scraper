@@ -8,6 +8,8 @@ app.get("/jobs/:title/:pages", async (req, res) => {
     const jobs = await scrapeIndeed(
       `https://www.indeed.com/jobs?q=${req.params.title}&fromage=${
         req.query.posted ? req.query.posted : 3
+      }&explvl=${
+        req.query.exprience ? req.query.experience : "entry_level"
       }&limit=50`,
       req.params.pages
     );
