@@ -11,17 +11,31 @@ const __launchPuppeteer = async (url) => {
   return page;
 };
 
-const scrapeIndeed = async (url) => {
-  const page = await __launchPuppeteer(url);
+const scrapeIndeed = async (url, pages) => {
+  let allJobs = [];
+  for (let i = 1; i <= pages; i++) {
+    let newUrl = `${url}&start=${50 * i}`;
+    const page = await __launchPuppeteer(newUrl);
 
-  const jobs = await page.evaluate(() => {
-    const jobs = document.getElementsByClassName(
-      "jobsearch-SerpJobCard unifiedRow row result clickcard"
-    ).length;
-    return jobs;
-  });
+    const jobs = await page.evaluate(() => {
+      const jobLinks = Array.from(
+        document.getElementsByClassName("jobtitle")
+      ).map((title, index) => {
+        return {
+          title: title.innerHTML,
+          company: document.getElementsByClassName("company")[index].innerText,
+          link: title.toString(),
+          posted: document.getElementsByClassName("date")[index].innerHTML,
+        };
+      });
 
-  return jobs;
+      return jobLinks;
+    });
+
+    allJobs.push(jobs);
+  }
+
+  return allJobs;
 };
 
 module.exports = { scrapeIndeed };

@@ -6,11 +6,13 @@ const scrapeIndeed = require("./scrapers").scrapeIndeed;
 app.get("/jobs/:title", async (req, res) => {
   try {
     const jobs = await scrapeIndeed(
-      `https://www.indeed.com/jobs?q=${req.params.title}`
+      `https://www.indeed.com/jobs?q=${req.params.title}&fromage=15&limit=50`,
+      10
     );
     res.send(jobs);
   } catch (err) {
-    res.status(500).send(err);
+    console.log(err);
+    res.sendStatus(500);
   }
 });
 
